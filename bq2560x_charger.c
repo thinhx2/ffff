@@ -1458,7 +1458,7 @@ static int bq2560x_regulator_init(struct bq2560x *bq)
 	struct regulator_init_data *init_data;
 	struct regulator_config cfg = {};
 
-	init_data = of_get_regulator_init_data(bq->dev, bq->dev->of_node);
+	init_data = of_get_regulator_init_data(bq->dev, bq->dev->of_node, &bq->batt_psy_desc);
 	if (!init_data) {
 		dev_err(bq->dev, "Unable to allocate memory\n");
 		return -ENOMEM;
@@ -2716,9 +2716,6 @@ static int bq2560x_charger_probe(struct i2c_client *client,
 	}
 
 	determine_initial_status(bq);
-
-	power_supply_set_voltage_limit(bq->usb_psy, bq->platform_data->ta.vreg);
-	power_supply_set_current_limit(bq->usb_psy, bq->platform_data->ta.ichg * 1000);
 
 	bq->recharge_enable = false;
 	bq2560x_enable_term(bq, bq->recharge_enable);
